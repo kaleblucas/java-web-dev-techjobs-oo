@@ -1,6 +1,6 @@
 package org.launchcode.techjobs_oo.Tests;
 
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.launchcode.techjobs_oo.*;
 
@@ -12,11 +12,11 @@ public class JobTest {
         assertEquals(10, 10, .001);
     }
 
-    Job test_emptyJobOne;
-    Job test_emptyJobTwo;
+    static Job test_emptyJobOne;
+    static Job test_emptyJobTwo;
 
-    @Before
-    public void createEmptyJobObjects() {
+    @BeforeClass
+    public static void createEmptyJobObjects() {
         test_emptyJobOne = new Job();
         test_emptyJobTwo = new Job();
     }
@@ -27,10 +27,9 @@ public class JobTest {
         assertEquals((test_emptyJobOne.getId() + 1), test_emptyJobTwo.getId());
     }
 
-    Job test_job;
-
-    @Before
-    public void createAllFieldsJobObject() {
+    static Job test_job;
+    @BeforeClass
+    public static void createAllFieldsJobObject() {
         test_job = new Job("Product tester", new Employer("ACME"), new Location("Desert"), new PositionType("Quality control"), new CoreCompetency("Persistence"));
     }
 
@@ -44,11 +43,10 @@ public class JobTest {
         assertTrue(test_job.getCoreCompetency() instanceof CoreCompetency);
     }
 
-    Job test_similarFieldsJobOne;
-    Job test_similarFieldsJobTwo;
-
-    @Before
-    public void createSimilarFieldsJobObjects() {
+    static Job test_similarFieldsJobOne;
+    static Job test_similarFieldsJobTwo;
+    @BeforeClass
+    public static void createSimilarFieldsJobObjects() {
         test_similarFieldsJobOne = new Job("Product tester", new Employer("ACME"), new Location("Desert"), new PositionType("Quality control"), new CoreCompetency("Persistence"));
         test_similarFieldsJobTwo = new Job("Product tester", new Employer("ACME"), new Location("Desert"), new PositionType("Quality control"), new CoreCompetency("Persistence"));
     }
@@ -56,5 +54,48 @@ public class JobTest {
     public void testJobsForEquality() {
         createSimilarFieldsJobObjects();
         assertFalse(test_similarFieldsJobOne.equals(test_similarFieldsJobTwo));
+    }
+
+    static Job test_newLineTestJob;
+    @BeforeClass
+    public static void createNewLineTestJob() {
+        test_newLineTestJob = new Job("Product tester", new Employer("ACME"), new Location("Desert"), new PositionType("Quality control"), new CoreCompetency("Persistence"));
+    }
+
+    @Test
+    public void testToStringForNewLine(){
+        createNewLineTestJob();
+        assertEquals("\n",test_newLineTestJob.toString().substring(0,1));
+        assertEquals("\n",test_newLineTestJob.toString().substring((test_newLineTestJob.toString().length()-1)));
+    }
+
+    static Job test_Job;
+    @BeforeClass
+    public static void createJobObject(){
+        test_Job = new Job("Product tester", new Employer("ACME"), new Location("Desert"), new PositionType("Quality control"), new CoreCompetency("Persistence"));;
+    }
+
+    @Test
+    public void testToStringForLabel(){
+        createJobObject();
+        assertTrue(test_Job.toString().contains("\nID:"));
+        assertTrue(test_Job.toString().contains("\nName:"));
+        assertTrue(test_Job.toString().contains("\nEmployer:"));
+        assertTrue(test_Job.toString().contains("\nLocation:"));
+        assertTrue(test_Job.toString().contains("\nPosition Type:"));
+        assertTrue(test_Job.toString().contains("\nCore Competency:"));
+    }
+
+
+    static Job test_jobMissingField;
+    @BeforeClass
+    public static void createJobMissingField(){
+        test_jobMissingField = new Job("Product tester", new Employer(), new Location("Desert"), new PositionType("Quality control"), new CoreCompetency("Persistence"));;
+    }
+
+    @Test
+    public void testMissingFieldJob(){
+        createJobMissingField();
+        assertTrue(test_jobMissingField.toString().contains("Employer: No data available."));
     }
 }
